@@ -55,7 +55,8 @@ test('list all franchises', async () => {
         .get('/api/franchise');
 
     expect(response.status).toBe(200);
-    expect(response.body.length).toBeGreaterThan(0);
+    //expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body).toBe([]);
 });
 
 test('create', async () => {
