@@ -52,7 +52,7 @@ test('get the pizza menu', async () => {
 
     expect(response.status).toBe(200);
     //expect(response.body.length).toBeGreaterThan(0);
-    expect(response.body).toBe([]);
+    expect(response.body.length).toBe(0);
 });
 
 test('add', async () => {

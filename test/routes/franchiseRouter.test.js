@@ -56,7 +56,7 @@ test('list all franchises', async () => {
 
     expect(response.status).toBe(200);
     //expect(response.body.length).toBeGreaterThan(0);
-    expect(response.body).toBe([]);
+    expect(response.body.length).toBe(0);
 });
 
 test('create', async () => {
