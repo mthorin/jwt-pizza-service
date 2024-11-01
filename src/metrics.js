@@ -7,6 +7,7 @@ class Metrics{
         this.totalGetRequest = 0;
         this.totalDeleteRequest = 0;
         this.totalPutRequest = 0;
+        this.totalRequest = 0
 
         this.totalAuthSuccess = 0;
         this.totalAuthFail = 0;
@@ -25,6 +26,7 @@ class Metrics{
     }
     // ----- Request Tracker -----
     requestTracker(req, res, next) {
+        this.totalRequest++;
         if (req.method == "POST") this.totalPostRequest++;
         if (req.method == "GET") this.totalGetRequest++;
         if (req.method == "DELETE") this.totalDeleteRequest++;
@@ -102,6 +104,9 @@ class Metrics{
     // ----- Metric Builders -----
     httpMetrics(buf) {
         // HTTP requests by method
+        const totalMetric = this.createHTTPMetric('request', 'all', 'total', this.totalRequest);
+        buf.add(totalMetric);
+
         const getMetric = this.createHTTPMetric('request', 'get', 'total', this.totalGetRequest);
         buf.add(getMetric);
 
