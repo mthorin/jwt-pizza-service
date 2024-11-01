@@ -36,7 +36,7 @@ class Metrics{
         res.on('finish', () => {
             const elapsedTime = Date.now() - startTime;
 
-            console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - ${res.statusCode} - ${elapsedTime}ms`);
+            // console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - ${res.statusCode} - ${elapsedTime}ms`);
             // Pizza
             if (req.originalUrl == '/api/order') {
                 if (req.method == 'POST'){
@@ -175,7 +175,7 @@ class Metrics{
     }
     
     sendMetricsPeriodically(period) {
-        const timer = setInterval(() => {
+        setInterval(() => {
             try {
                 const buf = new MetricBuilder();
                 this.httpMetrics(buf);
