@@ -168,3 +168,8 @@ jobs:
             service: jwt-pizza-service
             cluster: jwt-pizza-service
             wait-for-service-stability: false
+
+      - name: Annotate deployment in Grafana
+        run: |
+            curl -s -X POST https://mthorin1.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"fe2lub5hlz8qoa", "panelId":2, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
+            curl -s -X POST https://mthorin1.grafana.net/api/annotations -H "Authorization: Bearer ${{ secrets.GRAFANA_ACCESS_TOKEN }}" -H "Content-Type:application/json" -d '{"dashboardUID":"fe2lub5hlz8qoa", "panelId":3, "tags":["backend","production"], "text":"Version '"$version"' deployed" }'
