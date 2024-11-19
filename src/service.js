@@ -6,6 +6,8 @@ const version = require('./version.json');
 const config = require('./config.js');
 const metrics = require('./metrics');
 const logger = require('./logger');
+const { Role } = require('../database/database.js');
+const { asyncHandler, StatusCodeError } = require('./endpointHelper.js');
 
 const app = express();
 app.use(express.json());
@@ -17,6 +19,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 });
+
+let enableChaos = false;
 
 // Metrics and logging
 app.use(metrics.requestTracker);
