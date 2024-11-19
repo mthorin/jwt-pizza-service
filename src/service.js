@@ -28,6 +28,19 @@ apiRouter.use('/auth', authRouter);
 apiRouter.use('/order', orderRouter);
 apiRouter.use('/franchise', franchiseRouter);
 
+authRouter.put(
+  '/chaos/:state',
+  authRouter.authenticateToken,
+  asyncHandler(async (req, res) => {
+    if (!req.user.isRole(Role.Admin)) {
+      throw new StatusCodeError('unknown endpoint', 404);
+    }
+
+    enableChaos = req.params.state === 'true';
+    res.json({ chaos: enableChaos });
+  })
+);
+
 apiRouter.use('/docs', (req, res) => {
   res.json({
     version: version.version,
