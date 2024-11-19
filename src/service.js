@@ -6,7 +6,7 @@ const version = require('./version.json');
 const config = require('./config.js');
 const metrics = require('./metrics');
 const logger = require('./logger');
-const { Role } = require('../database/database.js');
+const { Role } = require('./database/database.js');
 const { asyncHandler, StatusCodeError } = require('./endpointHelper.js');
 
 const app = express();
