@@ -14,11 +14,14 @@ class Metrics{
 
         this.activeUsers = 0;
 
+        this.totalLatency = 0;
+
         //pizza
         this.totalPizza = 0;
+        this.pizzaLatency = 0;
         this.totalRevenue = 0;
         this.totalPizzaSuccess = 0;
-        this.totalLatency = 0;
+        this.totalPizzaFailure = 0;
 
         this.requestTracker = this.requestTracker.bind(this);
 
@@ -37,6 +40,7 @@ class Metrics{
         // Track response time and status
         res.on('finish', () => {
             const elapsedTime = Date.now() - startTime;
+            this.totalLatency += elapsedTime;
 
             // console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} - ${res.statusCode} - ${elapsedTime}ms`);
             // Pizza
@@ -44,11 +48,14 @@ class Metrics{
                 if (req.method == 'POST'){
                     if (res.statusCode == 200) {
                         this.totalPizzaSuccess++;
-                        this.totalLatency += elapsedTime;
                         res.req.body.items.forEach(item => {
                             this.totalPizza++;
                             this.totalRevenue += item.price;
                         });
+                    }
+
+                    if (res.statusCode == 500) {
+                        this.totalPizzaFailure++;
                     }
                 }
             }
@@ -73,6 +80,10 @@ class Metrics{
         });
 
         next();
+    }
+
+    logFactoryCall(latency) {
+        this.pizzaLatency += latency;
     }
     
     // ----- Helper Functions -----
@@ -118,6 +129,9 @@ class Metrics{
 
         const deleteMetric = this.createHTTPMetric('request', 'delete', 'total', this.totalDeleteRequest);
         buf.add(deleteMetric);
+
+        const latencyMetric = this.createMetric('request', 'latency', this.totalLatency);
+        buf.add(latencyMetric);
     }
 
     systemMetrics(buf) {
@@ -147,12 +161,16 @@ class Metrics{
         buf.add(revenueMetric);
 
         //  Creation latency
-        const latencyMetric = this.createMetric('purchase', 'latency', this.totalLatency);
+        const latencyMetric = this.createMetric('purchase', 'latency', this.pizzaLatency);
         buf.add(latencyMetric);
 
-        //  Creation failures
+        //  Creation success
         const successMetric = this.createMetric('purchase', 'success', this.totalPizzaSuccess);
         buf.add(successMetric);
+
+        //  Creation failures
+        const failureMetric = this.createMetric('purchase', 'success', this.totalPizzaFailure);
+        buf.add(failureMetric);
 
     }
 
