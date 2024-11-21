@@ -6,8 +6,6 @@ const version = require('./version.json');
 const config = require('./config.js');
 const metrics = require('./metrics');
 const logger = require('./logger');
-const { Role } = require('./database/database.js');
-const { asyncHandler, StatusCodeError } = require('./endpointHelper.js');
 
 const app = express();
 app.use(express.json());
@@ -20,8 +18,6 @@ app.use((req, res, next) => {
   next();
 });
 
-let enableChaos = false;
-
 // Metrics and logging
 app.use(metrics.requestTracker);
 app.use(logger.httpLogger);
@@ -31,19 +27,6 @@ app.use('/api', apiRouter);
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/order', orderRouter);
 apiRouter.use('/franchise', franchiseRouter);
-
-authRouter.put(
-  '/chaos/:state',
-  authRouter.authenticateToken,
-  asyncHandler(async (req, res) => {
-    if (!req.user.isRole(Role.Admin)) {
-      throw new StatusCodeError('unknown endpoint', 404);
-    }
-
-    enableChaos = req.params.state === 'true';
-    res.json({ chaos: enableChaos });
-  })
-);
 
 apiRouter.use('/docs', (req, res) => {
   res.json({
