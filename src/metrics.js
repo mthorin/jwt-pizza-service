@@ -169,7 +169,7 @@ class Metrics{
         buf.add(successMetric);
 
         //  Creation failures
-        const failureMetric = this.createMetric('purchase', 'success', this.totalPizzaFailure);
+        const failureMetric = this.createMetric('purchase', 'failure', this.totalPizzaFailure);
         buf.add(failureMetric);
 
     }
